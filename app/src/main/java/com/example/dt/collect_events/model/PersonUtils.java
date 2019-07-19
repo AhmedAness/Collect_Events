@@ -1,4 +1,4 @@
-package com.example.dt.collect_events;
+package com.example.dt.collect_events.model;
 
 public class PersonUtils {
 

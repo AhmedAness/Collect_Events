@@ -1,4 +1,4 @@
-package com.example.dt.collect_events;
+package com.example.dt.collect_events.view;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -6,26 +6,24 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import com.example.dt.collect_events.R;
 
 public class service extends Service {
     SensorManager sensorManager;
+    private static UpdateListener listenerr;
+
+    public void setListener(UpdateListener listener) {
+        listenerr = listener;
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -78,10 +76,14 @@ public class service extends Service {
 
     @Override
     public void onStart(Intent intent, int startid) {
-        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+
+        listenerr.onUpdate();
 
     }
 
+    public interface UpdateListener {
+        public void onUpdate();
+    }
 
 }
 

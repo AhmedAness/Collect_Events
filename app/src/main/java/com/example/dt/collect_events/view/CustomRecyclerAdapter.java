@@ -1,4 +1,4 @@
-package com.example.dt.collect_events;
+package com.example.dt.collect_events.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.dt.collect_events.R;
+import com.example.dt.collect_events.model.PersonUtils;
 
 import java.util.List;
 
