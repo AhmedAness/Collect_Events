@@ -39,7 +39,7 @@ public class UserDataManager implements Collector.Model {
             }
         }
 //                events = calendarProvider.getEvents(6).getList();
-        if (events.get(0) != null) {
+        if (events != null) {
             for (int i = 0; i < events.size(); i++) {
 
                 // Creating date format

@@ -21,9 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
+
 import com.example.dt.collect_events.presenter.Collector;
 import com.example.dt.collect_events.presenter.CollectorPresenter;
 import com.example.dt.collect_events.R;
@@ -36,16 +34,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.OkHttpClient;
-
 
 public class MainActivity extends AppCompatActivity implements Collector.View, service.UpdateListener {
 
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager layoutManager;
-
     int MyVersion = Build.VERSION.SDK_INT;
-
     Collector.Presenter presenter;
     @BindView(R.id.recycleViewContainer)
     RecyclerView recyclerView;
@@ -55,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements Collector.View, s
     Button Collect;
     @BindView(R.id.EmailContainer)
     LinearLayout EmailContainer;
-
     String EmailT;
 
     @Override
@@ -65,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements Collector.View, s
         ButterKnife.bind(this);
 
 
-        AndroidNetworking.initialize(getApplicationContext());
-
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(this);
@@ -74,23 +65,6 @@ public class MainActivity extends AppCompatActivity implements Collector.View, s
         recyclerView.setLayoutManager(layoutManager);
 
         presenter = new CollectorPresenter(new UserDataManager());
-
-        AndroidNetworking.get("https://www.google.com/search?source=hp&ei=Ye4xXbHxDZvkgwfPzKzQDA&q=fast+network+android&oq=fast+&gs_l=psy-ab.3.0.35i39j0i67j0i131i67j0i67l2j0i131i67j0i67l2j0i203j0i131.1033.1864..3044...0.0..0.154.876.0j6......0....1..gws-wiz.....0..0.QW5gPSR3cgs")
-                .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Toast.makeText(MainActivity.this, "hi ", Toast.LENGTH_SHORT).show();
-                        // do anything with response
-                    }
-                    @Override
-                    public void onError(ANError error) {
-                        Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                        // handle error
-                    }
-                });
-
-
         if (!isMyServiceRunning(service.class)) {
 
             service servicee = new service();
@@ -101,6 +75,12 @@ public class MainActivity extends AppCompatActivity implements Collector.View, s
                 this.startForegroundService(intent);
             } else {
                 this.startService(intent);
+            }
+        }
+
+        if (MyVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            if (!checkIfAlreadyhavePermission()) {
+                requestForSpecificPermission();
             }
         }
 
@@ -135,8 +115,8 @@ public class MainActivity extends AppCompatActivity implements Collector.View, s
         switch (requestCode) {
             case 101:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
                     //granted
-                    GetData();
                 } else {
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
                     //not granted
@@ -177,13 +157,7 @@ public class MainActivity extends AppCompatActivity implements Collector.View, s
             Email.setError("Valid item");
         }else {
             EmailT=Email.getText().toString();
-            if (MyVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                if (!checkIfAlreadyhavePermission()) {
-                    requestForSpecificPermission();
-                } else {
-                    GetData();
-                }
-            }
+            GetData();
         }
 
     }
